@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+
+# rosrun hider move_base_test.py
 import rospy
 import actionlib
 
@@ -54,18 +56,18 @@ if __name__ == '__main__':
 
     # A node called 'patrol' which is an action client to move_base
     rospy.init_node('patrol')
-    #print("Going to -1,2,0")
-    # goto([ (-1.0, 2.0, 0.0),
-    #   (0.0, 0.0, 0.0, 1.0)])
-    # print("Going to 1,2,0")
-    # goto([ (1.0, 2.0, 0.0),
-    #   (0.0, 0.0, 0.0, 1.0)])
-    # print("Going to -1,2,0")
-    # goto([ (-1.0, 2.0, 0.0),
-    #   (0.0, 0.0, 0.0, 1.0)])
-    goto([(0, 0.0, 0.0),
+    origin = False
+    other = True
+    if origin:
+      goto([(0, 0.0, 0.0),
+        (0.0, 0.0, 0.0, 1.0)])
+    if other:
+      x = -0.6437218679310709
+      y = -2.554388503760109
+      goto([(x, y, 0.0),
       (0.0, 0.0, 0.0, 1.0)])
-    # goto([(4.0, 4.0, 0.0),
-    #   (0.0, 0.0, 0.0, 1.0)])
-    # goto([(-4.0, -4.5, 0.0),
-    #   (0.0, 0.0, 0.0, 1.0)])
+
+# 1: -1.7735081466642917, -0.997734177613789
+# 2: -2.1011816676138357, -0.6534200537776607
+# 3: -2.5539556956726637, -1.0061623205332584
+    
