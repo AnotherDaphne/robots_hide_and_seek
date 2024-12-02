@@ -1,10 +1,11 @@
-# robots_hide_and_seek
+## hider_cwahldassule.zip
+zip that can be downloaded to run all the files
 
-2 be hiding 1 be seeking
-very intense
+## hider_sim.py
+This file contains all the move_base code
 
-## Chloe's Files:
-- hider_cwahldassule.zip
-- hider_sim.py
-- move_base_test.py
-- scan_sim.py
+## scan_sim.py
+This file handles all the data from the LIDAR indluding detecting pockets and calculating coordinates
+
+## move_base_test.py
+Simple file for sending the robot to specific coordinate using move_base
