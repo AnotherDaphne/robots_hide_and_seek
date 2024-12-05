@@ -9,6 +9,8 @@ import numpy as np
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import Point, Pose
+from sensor_msgs.msg import LaserScan
+
 
 class PID:
     def __init__(self, Kp, Ki, Kd, distance = 1):
@@ -47,10 +49,14 @@ class hider:
 
         self.hider_state = "explore"
 
+        self.twist = Twist()
+        self.MOVE_SPEED = 0.2
+        # self.TURN_SPEED = 
+
         self.scan_sub = rospy.Subscriber('/scan', LaserScan, self.scan_cb)
         self.wall_distance = 1
         self.pid_values = PID(Kp = 1.0, Ki = 0.0, Kd = 0.1, distance = self.wall_distance)
-        self.current_wall_distance = 0.0
+        self.current_wall_dist = 0.0
         self.corner_threshold = 0.5
 
     def wait_for_map(self):
@@ -70,18 +76,65 @@ class hider:
         # self.map_sub.unregister()  #do once get map, saves resources?
 
     def scan_cb(self, msg):
-        left_distance = min(msg.ranges[0:30] + msg.ranges[330:360])
-        right_distance = min(msg.ranges[])
+        left_distance = min(msg.ranges[0:30])
+        right_distance = min(msg.ranges[330:360])
 
-        left_min = np.min(left_distances)
-        right_min = np.min(right_distances)
-        cur_distance = min(left_min, right_min)
+        left_min = np.min(left_distance)
+        right_min = np.min(right_distance)
+        self.cur_wall_dist = min(left_min, right_min)
         # cur_distance = min(left_distance, right_distance)
 
-        if cur_distance <= wall_distance:
-            if abs(np.diff(ranges)) > self.corner_threshold:
+        # if cur_distance <= wall_distance:
+        #     if abs(np.diff(ranges)) > self.corner_threshold:
+        #         self.hider_state = "hide"
+        # # signal = self.pid_values.update(cur_distance - wall_distance)
+
+        if self.cur_wall_dist <= self.wall_distance and self.hider_state == "explore":
+            rospy.loginfo("Wall detected. Following the wall.")
+            self.hider_state = "follow_wall"
+
+        if self.hider_state == "follow_wall" and self.detect_corner(msg.ranges):
+            rospy.loginfo("Corner found. Hiding...")
+            self.hider_state = "hide"
+    
+    def detect_corner(self, ranges):
+        ranges_diff = np.diff(ranges)
+        sharp_changes = np.abs(ranges_diff) > self.corner_threshold
+
+        return np.any(sharp_changes)
+    
+    def follow_wall(self):
+        rate = rospy.Rate(10)  
+        while not rospy.is_shutdown() and self.hider_state == "follow_wall":
+
+            signal = self.pid_values.update(self.cur_wall_dist - self.wall_distance)
+
+            self.twist.linear.x = MOVE_SPEED  
+            self.twist.angular.z = control_signal 
+
+            self.cmd_pub.publish(self.twist)
+
+
+            if self.detect_corner():
+                rospy.loginfo("Corner detected")
                 self.hider_state = "hide"
-        # signal = self.pid_values.update(cur_distance - wall_distance)
+                break
+
+            rate.sleep()
+
+    def move_to_corner(self):
+        self.twist.linear.x = 0.0
+        self.twist.angualr.z = 0.0
+        self.cmd_pub.publish(self.twist)
+
+        rospy.sleep(1)
+
+        # current_time = rospy.Time.now()
+        # if (current_time - self.corner_turn_start_time).to_sec() < 4:  # turns for x seconds  (4 works better)
+        #         self.twist.linear.x = MOVE_SPEED * 0.4
+        #         self.twist.angular.z = TURN_SPEED * 1.1
+        #         print("turning_corner")
+        #         print(wall_distance)
 
     def send_goal(self, x, y):
         goal = MoveBaseGoal()  #create goal
@@ -128,18 +181,18 @@ class hider:
         for y in range(1, height - 1):  
             for x in range(1, width - 1):
 
-                if map_array[y, x] == UNKNOWN_THRESHOLD:  #current cell not explored
+                if map_array[y, x] == unknown:  #current cell not explored
 
                     neighborhood = [   # north south east west
                         map_array[y-1, x],  map_array[y+1, x],   
                         map_array[y, x-1],   map_array[y, x+1],   
                     ]
 
-                    for (cell in neighborhood):  #if any adjecent free, make point
+                    for cell in neighborhood:  #if any adjecent free, make point
                         if (cell <= free):
-                        world_x = x * resolution + origin.position.x   #grid to world coordinates
-                        world_y = y * resolution + origin.position.y
-                        unexplored_indicies.append(Point(world_x, world_y, 0))
+                            world_x = x * resolution + origin.position.x   #grid to world coordinates
+                            world_y = y * resolution + origin.position.y
+                            unexplored_indicies.append(Point(world_x, world_y, 0))
 
         if len(unexplored_indices) == 0:
             rospy.loginfo("No more unexplored cells")
@@ -164,7 +217,12 @@ class hider:
                     break
 
                 rate.sleep()
-            else if self.hider_state == "hiding":
+            elif self.hider_state == "hiding":
+                self.move_to_corner()
+
+            elif self.hider_state == "follow_wall":
+                self.follow_wall()
+
 
 if __name__ == '__main__':
     hide = hider()
