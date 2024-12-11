@@ -5,7 +5,7 @@ Hide and seek game consists of two separate teams; Hiders and Seekers. Hider's m
 
 # Summary
 ## James
-Multiple Seeking aglrithms that are still under improvement. One that is looking the most promising is the "wall follow search." as it is reliable and is almost guaranteed to find the robot. However, if the algorithm runs "luckily", the 'random search' agorithm in theory can find hider by, best case, traveling minimum distance and speed. This seeker algorithsm are an amalgamation of wall follow, odom, base move, and fiducial.
+Multiple Seeking algorithms that are still under improvement. One that is looking the most promising is the "wall follow search." as it is reliable and is almost guaranteed to find the robot. However, if the algorithm runs "luckily", the 'random search' algorithm in theory can find hider by, best case, traveling minimum distance and speed. This seeker algorithms are an amalgamation of wall follow, odom, base move, and fiducial.
 ## Daphne
 The hiding algorithm I have created gets the robot to explore the space randomly for a period of time. When this time is over, the robot will go to a wall it detects, and follows it until it finds a corner where the robot will then hide. If the robot is following a wall for a while without finding a suitable corner, it will go back to exploring for a bit before finding another wall with the hope of finding a good spot before the time is up.
 ## Chloe
