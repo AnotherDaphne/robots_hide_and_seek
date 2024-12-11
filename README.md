@@ -1,14 +1,18 @@
-## Link to Data/Tests
-[https://docs.google.com/spreadsheets/d/1lpmWlnTqMWZSKndbC97cu0bUynrpZY1xOJgwtPlUaSQ/edit?usp=sharing]
+Create a brief readme.md that includes:
+An introduction and summary
+Links to the video, lab notebook project report, and poster PDF
 
-## hider_cwahldassule.zip
-zip that can be downloaded to run all the files
+# Introduction
+# Summary
+## James
+## Daphne
+## Chloe
+I designed a hiding algorithm that identifies areas that are walled in on three sides - pockets - using lidar, and navigates to them using move_base. My project runs using *hider_real.py*, *scan_sim.py*, *timer.py*, and *my_odom.py*. The identification of pockets and coordinate calculation is done in *scan_sim.py* and move_base is handled in *hider_real.py*. *my_odom.py* and *timer.py* are helper programs.
 
-## hider_sim.py
-This file contains all the move_base code
+In order to better develop my pocket detection program, I graphed the lidar data in the spreadsheet below. The spreadsheet also includes notes on the debugging process and the success of the tests.
 
-## scan_sim.py
-This file handles all the data from the LIDAR indluding detecting pockets and calculating coordinates
+Data and progression: [https://docs.google.com/spreadsheets/d/1lpmWlnTqMWZSKndbC97cu0bUynrpZY1xOJgwtPlUaSQ/edit?usp=sharing]
 
-## move_base_test.py
-Simple file for sending the robot to specific coordinate using move_base
+
+# Video
+# Lab Notebook project report
