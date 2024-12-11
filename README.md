@@ -1,7 +1,3 @@
-Create a brief readme.md that includes:
-An introduction and summary
-Links to the video, lab notebook project report, and poster PDF
-
 # Introduction
 # Summary
 ## James
