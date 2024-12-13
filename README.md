@@ -22,3 +22,4 @@ This folder contains the map files used to run move_base for the demo
 
 # Video
 # Lab Notebook project report
+[https://github.com/campusrover/labnotebook2/blob/main/docs/reports/2024/HideAndSeek.md]
