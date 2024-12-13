@@ -15,6 +15,10 @@ In order to better develop my pocket detection program, I graphed the lidar data
 
 Data and progression: [https://docs.google.com/spreadsheets/d/1lpmWlnTqMWZSKndbC97cu0bUynrpZY1xOJgwtPlUaSQ/edit?usp=sharing]
 
+## map_files
+
+This folder contains the map files used to run move_base for the demo
+
 
 # Video
 # Lab Notebook project report
